@@ -1,10 +1,11 @@
 
 const express = require('express')
-const args = require('minimist')(process.argv.slice(2)) 
 const app = express()
+const args = require('minimist')(process.argv.slice(2)) 
+
 
 args['port']
-var port = args[port] || 3000 // add command line argument
+const port = args.port || process.env.port || 5000// add command line argument
 
 const server = app.listen(port, () => {
     console.log('App is running on port %PORT%'.replace('%PORT%',port))
