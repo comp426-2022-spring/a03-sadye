@@ -27,8 +27,9 @@ function coinFlip() {
 }
 
 app.get('/app/flip/', (req, res) => {
-  var flip = coinFlip()
-	res.status(200).json({ 'flip ' : flip })
+  const flip = coinFlip()
+	res.status(200).json({ 'flip' : flip })
+  res.end()
 });
 
 function coinFlips(flips) {
