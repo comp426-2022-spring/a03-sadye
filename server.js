@@ -1,23 +1,15 @@
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-
 const express = require('express')
 const args = require('minimist')(process.argv.slice(2)) 
 const app = express()
 
 args['port']
-var port = args[port] | 5000 // add command line argument
+var port = args[port] || 3000 // add command line argument
 
 const server = app.listen(port, () => {
     console.log('App is running on port %PORT%'.replace('%PORT%',port))
 })
 
-app.use(function(req, res) {
-    res.status(404).send("Endpoint does not exist")
-    res.type("text/plain")
-
-})
 
 app.get('/app/', (req, res) => {
     //Respond w status 200
@@ -34,8 +26,8 @@ function coinFlip() {
 }
 
 app.get('/app/flip/', (req, res) => {
-    var flip = coinFlip()
-	res.statusCode(200).json({ 'flip ' : flip })
+  var flip = coinFlip()
+	res.status(200).json({ 'flip ' : flip })
 });
 
 function coinFlips(flips) {
@@ -62,11 +54,12 @@ function coinFlips(flips) {
     }
   
   }
+
 app.get('/app/flips/:number', (req, res) => {
 	var number = req.params.number
-    var raw = flips(number)
-    var summary = countFlips(raw)
-    res.statusCode(200).json({ 'raw' : raw , 'summary' : summary })
+  var raw = coinFlips(number)
+  var summary = countFlips(raw)
+  res.status(200).json({ 'raw' : raw , 'summary' : summary })
 });
 
 function flipACoin(call) {
@@ -85,10 +78,15 @@ function flipACoin(call) {
   }
 app.get('/app/flip/call/heads', (req, res) => {
 	var call = flipACoin('heads')
-    res.statusCode(200).json(call)
+    res.status(200).json(call)
 });
 app.get('/app/flip/call/tails', (req, res) => {
 	var call = flipACoin('tails')
-    res.statusCode(200).json(call)
+    res.status(200).json(call)
 });
 
+app.use(function(req, res) {
+  res.status(404).send("Endpoint does not exist")
+  res.type("text/plain")
+
+})
