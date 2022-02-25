@@ -25,25 +25,66 @@ app.get('/app/', (req, res) => {
         res.end(res.statusCode+ ' ' + res.statusMessage)
 });
 
-app.get('/app/flips/:number', (req, res) => {
-	//Some
-	//expressions
-	//go
-	//here
-});
-
-app.get('/app/flip/call/:call', (req, res) => {
-	//Some
-	//expressions
-	//go
-	//here
-});
-
 function coinFlip() {
     return(Math.floor(Math.random()*2)==0)? 'heads':'tails';
-  }
+}
 
 app.get('/app/flip/', (req, res) => {
     var flip = coinFlip()
-	res.statusCode(200).json({ 'flip ' : flip})
+	res.statusCode(200).json({ 'flip ' : flip })
 });
+
+function coinFlips(flips) {
+    const results = []
+    for(let i=0; i<flips; i++){
+      results[i] = coinFlip()
+    }
+    return results;
+}
+
+  function countFlips(array) {
+    var headcount = 0
+    var tailcount = 0
+    for(let i =0; i < array.length; i++){
+      if(array[i] === "heads"){
+        headcount++
+      }else{
+        tailcount++
+      }
+    }
+    return{
+      tails: tailcount,
+      heads: headcount
+    }
+  
+  }
+app.get('/app/flips/:number', (req, res) => {
+	var number = req.params.number
+    var raw = flips(number)
+    var summary = countFlips(raw)
+    res.statusCode(200).json({ 'raw' : raw , 'summary' : summary })
+});
+
+function flipACoin(call) {
+    var flips = coinFlip();
+    var result;
+    if (flips === call){
+      result = "win"
+    }else {
+      result = "lose"
+    }
+    return{
+      call: call,
+      flip: flips,
+      result: result
+    }
+  }
+app.get('/app/flip/call/heads', (req, res) => {
+	var call = flipACoin('heads')
+    res.statusCode(200).json(call)
+});
+app.get('/app/flip/call/tails', (req, res) => {
+	var call = flipACoin('tails')
+    res.statusCode(200).json(call)
+});
+
